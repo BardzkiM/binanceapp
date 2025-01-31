@@ -36,9 +36,12 @@ eg. call to get the analyzed data:
 `http://localhost:3000/analyze/BTCUSDT?startTime=1738148400000&endTime=1738152000000&interval=1h`
 response:
 
-````{
+```{
     "symbol": "BTCUSDT",
     "interval": "1h",
     "change": "-0.41%"
-}```
-````
+}
+```
+
+#run tests
+`npm run test`
