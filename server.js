@@ -9,9 +9,6 @@ app.get("/marketData/:symbol", async (req, res) => {
   try {
     const symbol = req.params.symbol;
     const { startTime, endTime } = req.query;
-    console.log("symbol: ", symbol);
-    console.log("startTime: ", startTime);
-    console.log("endTime: ", endTime);
 
     const response = await axios.get(`${BINANCE_API_BASE_URL}klines`, {
       params: {
@@ -31,8 +28,6 @@ app.get("/marketData/:symbol", async (req, res) => {
       volume: parseFloat(item[5]),
       closeTime: parseFloat(item[6]),
     }));
-
-    console.log("data: ", data);
 
     res.json({ symbol, data });
   } catch (error) {
