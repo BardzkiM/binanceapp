@@ -8,12 +8,12 @@ const BINANCE_API_BASE_URL = "https://api.binance.com/api/v3/";
 app.get("/marketData/:symbol", async (req, res) => {
   try {
     const symbol = req.params.symbol;
-    const { startTime, endTime } = req.query;
+    const { startTime, endTime, interval } = req.query;
 
     const response = await axios.get(`${BINANCE_API_BASE_URL}klines`, {
       params: {
         symbol,
-        interval: "1h",
+        interval: interval || "1h",
         startTime,
         endTime,
       },
@@ -30,6 +30,31 @@ app.get("/marketData/:symbol", async (req, res) => {
     }));
 
     res.json({ symbol, data });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/analyze/:symbol", async (req, res) => {
+  try {
+    const symbol = req.params.symbol;
+    const { startTime, endTime, interval } = req.query;
+
+    const response = await axios.get(`${BINANCE_API_BASE_URL}klines`, {
+      params: {
+        symbol,
+        interval: interval || "1h",
+        startTime,
+        endTime,
+      },
+    });
+
+    const closingPrices = response.data.map((item) => parseFloat(item[4]));
+    const first = closingPrices[0];
+    const last = closingPrices[closingPrices.length - 1];
+    const change = ((last - first) / first) * 100;
+
+    res.json({ symbol, interval, change: `${change.toFixed(2)}%` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
